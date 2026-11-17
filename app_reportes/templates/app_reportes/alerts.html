@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Alertas de acompañamiento · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">BIENESTAR / SEGUIMIENTO PRIORITARIO</p><h1 class="page-title">ALERTAS DE <span>CAMPO.</span></h1><p class="lead">Perfiles que requieren actualización, acompañamiento por desempleo prolongado o atención institucional.</p></div></header>
+<section class="table-card"><div class="table-wrap"><table><thead><tr><th>EGRESADO</th><th>PROGRAMA</th><th>ALERTA</th><th>CONTACTO</th><th>FICHA</th></tr></thead><tbody>
+{% for graduate in alerts %}
+<tr><td><strong>{{ graduate.first_name }} {{ graduate.last_name }}</strong><br><span class="muted">{{ graduate.document_number }}</span></td><td>{{ graduate.program }}</td><td>{% if graduate.vulnerability %}<span class="badge badge-red">VULNERABILIDAD</span>{% endif %}{% if graduate.employment_status == "Desempleado" %}<span class="badge badge-orange">DESEMPLEO</span>{% endif %}{% if graduate.status == "Desactualizado" %}<span class="badge">DESACTUALIZADO</span>{% endif %}{% if graduate.pk in negative_ids %}<span class="badge badge-red">ENCUESTA NEGATIVA</span>{% endif %}</td><td>{{ graduate.phone|default:"Sin teléfono" }}<br>{{ graduate.email|default:"Sin correo" }}</td><td><a class="button button-ghost button-small" href="{% url 'app_reportes:alert_detail' graduate.pk %}">ACOMPAÑAR →</a></td></tr>
+{% empty %}<tr><td colspan="5" class="empty-state">No hay perfiles que requieran acompañamiento por ahora.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

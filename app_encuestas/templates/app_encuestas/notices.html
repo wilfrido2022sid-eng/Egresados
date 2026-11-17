@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Avisos institucionales · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">COMUNICACIONES / CENTRO</p><h1 class="page-title">AVISOS <span>INSTITUCIONALES.</span></h1><p class="lead">Publica novedades para toda la comunidad o para cohortes seleccionadas.</p></div><a class="button button-primary" href="{% url 'app_encuestas:notice_create' %}">+ PUBLICAR AVISO</a></header>
+<section class="content-grid">{% for notice in notices %}<article class="paper-card"><div class="section-topline"><span class="mono">AVISO / {{ notice.created_at|date:"d/m/Y" }}</span><span class="badge {% if notice.published %}badge-cyan{% else %}badge-orange{% endif %}">{% if notice.published %}PUBLICADO{% else %}BORRADOR{% endif %}</span></div><h2>{{ notice.title }}</h2><p>{{ notice.body|linebreaksbr }}</p><p class="mono">{{ notice.target_program|default:"TODOS LOS PROGRAMAS" }} · {{ notice.target_center|default:"TODOS LOS CENTROS" }}</p></article>{% empty %}<div class="paper-card empty-state">No hay avisos registrados.</div>{% endfor %}</section>
+{% endblock %}

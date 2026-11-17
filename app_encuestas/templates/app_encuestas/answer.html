@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ survey.title }} · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="section-heading"><p class="eyebrow">ENCUESTA DE SEGUIMIENTO / {{ survey.created_at|date:"Y" }}</p><h1 class="page-title">{{ survey.title|upper }}</h1><p class="lead">{{ survey.description }}</p></header>
+<section class="form-card ink-card">
+  <form method="post" class="form-grid">{% csrf_token %}
+    {% for question in questions %}
+      <fieldset class="question-block">
+        <legend>{{ forloop.counter }}. {{ question.prompt }} {% if question.required %}<span class="field-error">*</span>{% else %}<span class="muted">(opcional)</span>{% endif %}</legend>
+        {% if question.question_type == "textarea" %}
+          <textarea name="pregunta_{{ question.pk }}" {% if question.required %}required{% endif %}></textarea>
+        {% elif question.question_type == "radio" or question.question_type == "checkbox" %}
+          <div class="option-list">{% for option in question.options %}
+            <label class="option-item"><input type="{% if question.question_type == 'radio' %}radio{% else %}checkbox{% endif %}" name="pregunta_{{ question.pk }}" value="{{ option }}" {% if question.required and forloop.first %}required{% endif %}>{{ option }}</label>
+          {% endfor %}</div>
+        {% else %}
+          <input type="{% if question.question_type == 'number' %}number{% else %}text{% endif %}" name="pregunta_{{ question.pk }}" {% if question.required %}required{% endif %}>
+        {% endif %}
+      </fieldset>
+    {% endfor %}
+    <div class="button-row"><button class="button button-primary" type="submit">ENVIAR RESPUESTAS</button><a class="button button-ghost" href="{% url 'app_encuestas:pending' %}">VOLVER</a></div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fcf9f0">
+  <title>{% block title %}Shinobi Tech Core{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/app_egresados.svg' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app_egresados.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{% if user.is_authenticated %}{% url 'app_usuarios:home' %}{% else %}{% url 'app_usuarios:login' %}{% endif %}">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>SHINOBI TECH <small>CORE / EGRESADOS</small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">MENÚ</button>
+    <nav id="primary-nav" class="primary-nav" aria-label="Navegación principal">
+      {% if user.is_authenticated %}
+        {% if can_view_reports %}
+          <a href="{% url 'app_reportes:dashboard' %}">Panel</a>
+          <a href="{% url 'app_reportes:alerts' %}">Alertas</a>
+        {% endif %}
+        {% if can_manage_graduates %}
+          <a href="{% url 'app_egresados:list' %}">Egresados</a>
+        {% endif %}
+        {% if can_manage_surveys %}
+          <a href="{% url 'app_encuestas:list' %}">Encuestas</a>
+        {% endif %}
+        {% if is_graduate %}
+          <a href="{% url 'app_egresados:my_profile' %}">Mi perfil</a>
+          <a href="{% url 'app_encuestas:pending' %}">Encuestas pendientes</a>
+        {% endif %}
+        <form class="logout-form" action="{% url 'app_usuarios:logout' %}" method="post">
+          {% csrf_token %}<button class="nav-logout" type="submit">Salir</button>
+        </form>
+      {% else %}
+        <a href="{% url 'app_usuarios:login' %}">Ingresar</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main class="page-shell">
+    {% if messages %}
+      <section class="message-stack" aria-live="polite">
+        {% for message in messages %}
+          <p class="message message-{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+      </section>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <span>SENA / SEGUIMIENTO A EGRESADOS</span>
+    <span class="mono">SISTEMA DE INFORMACIÓN · {% now "Y" %}</span>
+  </footer>
+  <script>
+    const menuButton = document.querySelector(".nav-toggle");
+    const navigation = document.querySelector("#primary-nav");
+    if (menuButton && navigation) {
+      menuButton.addEventListener("click", () => {
+        const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+        menuButton.setAttribute("aria-expanded", String(!isOpen));
+        navigation.classList.toggle("is-open", !isOpen);
+      });
+    }
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Acompañamiento · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">BIENESTAR / FICHA DE ACOMPAÑAMIENTO</p><h1 class="page-title">{{ graduate.first_name|upper }} <span>{{ graduate.last_name|upper }}.</span></h1><p class="lead">{{ graduate.program }} · {{ graduate.document_type }} {{ graduate.document_number }}</p></div><a class="button button-ghost" href="{% url 'app_reportes:alerts' %}">← VOLVER A ALERTAS</a></header>
+<div class="content-grid">
+  <section class="paper-card"><p class="eyebrow">CONTACTO / INFORMACIÓN PERSONAL</p><h2 class="panel-title">{{ graduate.phone|default:"TELÉFONO NO REGISTRADO" }}</h2><p>{{ graduate.email|default:"Correo no registrado" }}</p><p>{{ graduate.address|default:"Dirección no registrada" }}, {{ graduate.municipality|default:"Municipio no registrado" }}</p><p class="mono">SITUACIÓN / {{ graduate.employment_status }}</p>{% if graduate.vulnerability %}<span class="badge badge-red">REQUIERE ACOMPAÑAMIENTO</span>{% endif %}</section>
+  <section class="paper-card"><div class="page-header"><div><p class="eyebrow">BITÁCORA / SEGUIMIENTO</p><h2 class="panel-title">CONTACTOS REGISTRADOS</h2></div>{% if can_create_accompaniment %}<a class="button button-primary button-small" href="{% url 'app_reportes:accompaniment_create' graduate.pk %}">+ NUEVA NOTA</a>{% endif %}</div>
+  {% for note in notes %}<article class="note-entry"><div class="section-topline"><span class="mono">{{ note.created_at|date:"d/m/Y H:i" }} · {{ note.get_contacted_via_display|default:note.contacted_via }}</span><span class="badge">{{ note.created_by.get_full_name|default:note.created_by.username }}</span></div><p>{{ note.body|linebreaksbr }}</p>{% if note.created_by_id == user.id %}<a href="{% url 'app_reportes:accompaniment_update' note.pk %}">EDITAR MI NOTA →</a>{% endif %}</article>{% empty %}<p class="muted">Aún no hay acompañamientos registrados.</p>{% endfor %}</section>
+</div>
+{% endblock %}

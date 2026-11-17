@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Mi perfil · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">MI PERFIL / EGRESADO</p><h1 class="page-title">MI TRAYECTORIA <span>CONTINÚA.</span></h1><p class="lead">Hola, {{ graduate.first_name }}. Mantén tu información al día para fortalecer el seguimiento de tu cohorte.</p></div><div class="toolbar"><a class="button button-primary" href="{% url 'app_egresados:my_profile_update' %}">ACTUALIZAR DATOS</a><a class="button button-ghost" href="{% url 'app_egresados:trajectory_list' %}">MI TRAYECTORIA</a></div></header>
+<div class="metric-grid">
+  <article class="metric-card accent"><span class="metric-label">PROGRAMA CERTIFICADO</span><p class="metric-value">{{ graduate.program|truncatechars:24 }}</p><span class="mono">SENA / {{ graduate.certified_on|date:"Y" }}</span></article>
+  <article class="metric-card"><span class="metric-label">ESTADO LABORAL</span><p class="metric-value">{{ graduate.get_employment_status_display|upper }}</p><span class="mono">SITUACIÓN ACTUAL</span></article>
+  <article class="metric-card cyan"><span class="metric-label">ENCUESTAS PENDIENTES</span><p class="metric-value">{{ pending_count|default:"—" }}</p><a href="{% url 'app_encuestas:pending' %}">VER ENCUESTAS →</a></article>
+  <article class="metric-card"><span class="metric-label">ÚLTIMA ACTUALIZACIÓN</span><p class="metric-value">{{ graduate.last_updated_at|date:"d/m" }}</p><span class="mono">{{ graduate.last_updated_at|date:"Y" }}</span></article>
+</div>
+<section class="content-grid">
+  <article class="paper-card"><p class="eyebrow">IDENTIFICACIÓN / DATOS INMUTABLES</p><h2 class="panel-title">{{ graduate.first_name }} {{ graduate.last_name }}</h2><p>{{ graduate.document_type }} · {{ graduate.document_number }}</p><p>{{ graduate.program }} · Certificado {{ graduate.certified_on|date:"d/m/Y" }}</p></article>
+  <article class="paper-card"><p class="eyebrow">CONTACTO / DATOS VIGENTES</p><h2 class="panel-title">{{ graduate.email|default:"CORREO PENDIENTE" }}</h2><p>{{ graduate.phone|default:"Teléfono pendiente" }}</p><p>{{ graduate.municipality|default:"Municipio pendiente" }}</p></article>
+</section>
+<section class="section-spaced"><div class="section-heading"><p class="eyebrow">CENTRO / COMUNICACIONES</p><h2 class="panel-title">AVISOS INSTITUCIONALES</h2></div><div class="content-grid">{% for notice in notices %}<article class="paper-card"><p class="eyebrow">AVISO / {{ notice.created_at|date:"d/m/Y" }}</p><h2>{{ notice.title }}</h2><p>{{ notice.body|linebreaksbr }}</p></article>{% empty %}<div class="paper-card empty-state">No hay avisos institucionales para tu cohorte.</div>{% endfor %}</div></section>
+{% endblock %}

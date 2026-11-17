@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Autorización de datos · Shinobi Tech Core{% endblock %}
+{% block content %}
+<section class="section-heading">
+  <p class="eyebrow">HABEAS DATA / AUTORIZACIÓN</p>
+  <h1 class="page-title">TU INFORMACIÓN, <span>BAJO TU CONTROL.</span></h1>
+  <p class="lead">Antes de continuar, revisa la Política de Tratamiento de Datos Personales del SENA.</p>
+</section>
+<section class="paper-card consent-card">
+  <div class="section-topline"><span class="mono">LECTURA REQUERIDA</span><span class="seal">S</span></div>
+  <h2>Tratamiento de datos personales</h2>
+  <p>La información registrada en este portal se utiliza para mantener actualizado el seguimiento institucional a egresados, gestionar encuestas y generar estadísticas de formación, empleabilidad y emprendimiento.</p>
+  <p>El acceso a los datos personales se limita a los perfiles autorizados. Los reportes estadísticos presentan los registros inactivos únicamente como métricas históricas agregadas. Puedes actualizar tus datos de contacto y solicitar información sobre el tratamiento a través de los canales oficiales del SENA.</p>
+  <p class="notice-line"><strong>Importante:</strong> consulta la versión vigente de la Política integral de tratamiento y protección de datos personales publicada en los canales oficiales del SENA antes de autorizar.</p>
+  <form method="post" class="form-grid consent-form">
+    {% csrf_token %}
+    <label class="check-line">{{ form.accepted }} <span>{{ form.accepted.label }}</span></label>
+    {% for error in form.accepted.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+    <div class="button-row">
+      <button class="button button-primary" type="submit">CONTINUAR Y ACEPTAR</button>
+      <button class="button button-ghost" type="submit" name="accepted" value="">RECHAZAR Y SALIR</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

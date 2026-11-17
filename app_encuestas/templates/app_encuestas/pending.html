@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Encuestas pendientes · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="section-heading"><p class="eyebrow">MI PERFIL / PARTICIPACIÓN</p><h1 class="page-title">TU VOZ <span>CUENTA.</span></h1><p class="lead">Encuestas institucionales asignadas a tu programa y centro.</p></header>
+<section class="content-grid">
+{% for survey in surveys %}
+  <article class="paper-card survey-card"><p class="eyebrow">SEGUIMIENTO / {{ survey.created_at|date:"Y" }}</p><h2>{{ survey.title }}</h2><p class="muted">{{ survey.description }}</p><p class="mono">{{ survey.questions.count }} PREGUNTAS</p><a class="button button-primary" href="{% url 'app_encuestas:answer' survey.pk %}">RESPONDER →</a></article>
+{% empty %}<div class="paper-card empty-state">No tienes encuestas pendientes. Te avisaremos cuando se publique una nueva.</div>{% endfor %}
+</section>
+{% endblock %}

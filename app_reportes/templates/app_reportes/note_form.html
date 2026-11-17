@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="section-heading"><p class="eyebrow">BITÁCORA / {{ graduate.first_name|upper }} {{ graduate.last_name|upper }}</p><h1 class="page-title">{{ title|upper }}</h1></header>
+<section class="form-card ink-card"><form method="post" class="form-grid">{% csrf_token %}{% for field in form %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}<div class="button-row"><button class="button button-primary" type="submit">GUARDAR NOTA</button><a class="button button-ghost" href="{% url 'app_reportes:alert_detail' graduate.pk %}">CANCELAR</a></div></form></section>
+{% endblock %}

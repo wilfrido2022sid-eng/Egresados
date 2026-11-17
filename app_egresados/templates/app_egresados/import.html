@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Importar egresados · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="section-heading"><p class="eyebrow">CARGA MASIVA / CSV · XLSX</p><h1 class="page-title">IMPORTAR <span>COHORTE.</span></h1><p class="lead">El lote se valida completo antes de guardarse. Si una fila no cumple los criterios, no se importa ninguna.</p></header>
+<section class="form-card ink-card">
+  <h2 class="panel-title">SELECCIONAR ARCHIVO</h2>
+  <p class="muted">Columnas requeridas: <span class="mono">document_type, document_number, first_name, last_name, program, certified_on, academic_status</span>. El estado académico debe ser “Certificado”. Fechas en formato AAAA-MM-DD.</p>
+  <form method="post" enctype="multipart/form-data" class="form-grid">
+    {% csrf_token %}
+    <div class="field"><label for="archivo">ARCHIVO CSV O EXCEL (.XLSX)</label><input id="archivo" type="file" name="archivo" accept=".csv,.xlsx,.xlsm" required></div>
+    <button class="button button-primary" type="submit">VALIDAR E IMPORTAR</button>
+    <a class="button button-ghost" href="{% url 'app_egresados:list' %}">VOLVER</a>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Panel institucional · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">CENTRO DE CONTROL / TELEMETRÍA DE EGRESADOS</p><h1 class="page-title">DATOS EN <span>MOVIMIENTO.</span></h1><p class="lead">Indicadores agregados de empleabilidad, emprendimiento y trayectoria de cohortes.</p></div><a class="button button-ink" href="{% url 'app_reportes:alerts' %}">ALERTAS · {{ alert_count }}</a></header>
+<form class="filter-panel filter-row" method="get">
+  <div class="filter-field"><label for="programa">Programa de formación</label><select id="programa" name="programa"><option value="">Todos los programas</option>{% for item in programs %}<option value="{{ item }}" {% if filters.programa == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></div>
+  <div class="filter-field"><label for="centro">Centro</label><select id="centro" name="centro"><option value="">Todos los centros</option>{% for item in centers %}<option value="{{ item }}" {% if filters.centro == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></div>
+  <div class="filter-field"><label for="cohorte">Cohorte / año</label><select id="cohorte" name="cohorte"><option value="">Todos los años</option>{% for item in years %}<option value="{{ item|date:'Y' }}" {% if filters.cohorte == item|date:'Y' %}selected{% endif %}>{{ item|date:"Y" }}</option>{% endfor %}</select></div>
+  <button class="button button-ink button-small" type="submit">APLICAR</button>
+</form>
+<div class="metric-grid">
+  <article class="metric-card accent"><span class="metric-label">EGRESADOS ACTIVOS</span><p class="metric-value">{{ metrics.total }}</p><span class="mono">COHORTE SELECCIONADA</span></article>
+  <article class="metric-card cyan"><span class="metric-label">TASA DE EMPLEABILIDAD</span><p class="metric-value">{{ metrics.employment_rate }}%</p><span class="mono">{{ metrics.employed }} EMPLEADOS / INDEPENDIENTES</span></article>
+  <article class="metric-card"><span class="metric-label">ÍNDICE DE EMPRENDIMIENTO</span><p class="metric-value">{{ metrics.entrepreneurship_rate }}%</p><span class="mono">{{ metrics.entrepreneurs }} EMPRENDEDORES</span></article>
+  <article class="metric-card"><span class="metric-label">HISTÓRICO INACTIVO</span><p class="metric-value">{{ metrics.inactive_history }}</p><span class="mono">SOLO MÉTRICA ANÓNIMA</span></article>
+</div>
+<div class="content-grid">
+  <section class="paper-card"><p class="eyebrow">TELEMETRÍA / CONTRATACIÓN</p><h2 class="panel-title">TIPOS DE CONTRATO</h2>{% for item in metrics.contract_counts %}<div class="contract-meter"><div class="meter-label"><span>{{ item.contract_type }}</span><strong>{{ item.total }}</strong></div><div class="meter-track"><span style="width:{% widthratio item.total metrics.total 100 %}%"></span></div></div>{% empty %}<p class="muted">Aún no se registran tipos de contrato para esta selección.</p>{% endfor %}</section>
+  <section class="paper-card"><p class="eyebrow">EXPORTACIÓN / INFORME CONSOLIDADO</p><h2 class="panel-title">DESCARGAR REPORTE</h2><p class="muted">Exporta los indicadores visibles con los filtros de programa, centro y cohorte aplicados.</p><div class="toolbar"><a class="button button-ghost button-small" href="{% url 'app_reportes:export' 'csv' %}?programa={{ filters.programa|urlencode }}&centro={{ filters.centro|urlencode }}&cohorte={{ filters.cohorte|urlencode }}">CSV</a><a class="button button-ghost button-small" href="{% url 'app_reportes:export' 'xlsx' %}?programa={{ filters.programa|urlencode }}&centro={{ filters.centro|urlencode }}&cohorte={{ filters.cohorte|urlencode }}">EXCEL</a><a class="button button-primary button-small" href="{% url 'app_reportes:export' 'pdf' %}?programa={{ filters.programa|urlencode }}&centro={{ filters.centro|urlencode }}&cohorte={{ filters.cohorte|urlencode }}">PDF</a></div></section>
+</div>
+<p class="mono">PRIVACIDAD / LOS PERFILES INACTIVOS NO APORTAN DATOS IDENTIFICABLES A ESTE TABLERO.</p>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Encuestas · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">SEGUIMIENTO / DISEÑO DE FORMULARIOS</p><h1 class="page-title">FORMULARIOS <span>DE CAMPO.</span></h1><p class="lead">Diseña y publica instrumentos de seguimiento por programa o centro.</p></div><div class="toolbar"><a class="button button-ghost" href="{% url 'app_encuestas:notices' %}">AVISOS</a><a class="button button-primary" href="{% url 'app_encuestas:create' %}">+ DISEÑAR ENCUESTA</a></div></header>
+<section class="content-grid">
+{% for survey in surveys %}
+  <article class="survey-card paper-card">
+    <div class="section-topline"><span class="mono">ENCUESTA / {{ survey.created_at|date:"Ymd" }}-{{ survey.pk }}</span><span class="badge {% if survey.published %}badge-cyan{% else %}badge-orange{% endif %}">{% if survey.published %}PUBLICADA{% else %}BORRADOR{% endif %}</span></div>
+    <h2>{{ survey.title }}</h2><p class="muted">{{ survey.description|default:"Sin descripción" }}</p>
+    <p class="mono">PREGUNTAS / {{ survey.questions.count }} · AUDIENCIA / {{ survey.target_program|default:"TODOS LOS PROGRAMAS" }}</p>
+    {% if survey.target_center %}<p class="mono">CENTRO / {{ survey.target_center }}</p>{% endif %}
+    {% if not survey.published %}<form method="post" action="{% url 'app_encuestas:publish' survey.pk %}">{% csrf_token %}<button class="button button-ink button-small" type="submit">PUBLICAR FORMULARIO</button></form>{% endif %}
+  </article>
+{% empty %}
+  <div class="paper-card empty-state">Todavía no hay encuestas creadas. Diseña la primera para iniciar el seguimiento.</div>
+{% endfor %}
+</section>
+{% endblock %}

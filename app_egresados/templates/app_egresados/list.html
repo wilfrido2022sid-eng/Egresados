@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Egresados · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div><p class="eyebrow">BASE INSTITUCIONAL / REGISTROS</p><h1 class="page-title">CENTRO DE <span>EGRESADOS.</span></h1></div>
+  <div class="toolbar">
+    <a class="button button-ghost" href="{% url 'app_egresados:import' %}">IMPORTAR CSV / XLSX</a>
+    <a class="button button-primary" href="{% url 'app_egresados:create' %}">+ REGISTRAR</a>
+  </div>
+</header>
+<form class="filter-panel filter-row" method="get">
+  <div class="filter-field"><label for="q">Buscar por nombre o documento</label><input id="q" name="q" value="{{ query }}" placeholder="Ej. 10203040"></div>
+  <div class="filter-field"><label for="estado">Estado</label><select id="estado" name="estado"><option value="">Todos los estados</option>{% for value,label in status_choices %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+  <button class="button button-ink button-small" type="submit">FILTRAR</button>
+</form>
+<section class="table-card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>EGRESADO</th><th>DOCUMENTO</th><th>PROGRAMA</th><th>CERTIFICACIÓN</th><th>ESTADO</th><th>FICHA</th></tr></thead>
+      <tbody>
+      {% for graduate in page %}
+        <tr>
+          <td><strong>{{ graduate.first_name }} {{ graduate.last_name }}</strong><br><span class="muted">{{ graduate.email|default:"Sin correo registrado" }}</span></td>
+          <td>{{ graduate.document_type }} · {{ graduate.document_number }}</td>
+          <td>{{ graduate.program }}<br><span class="muted">{{ graduate.center|default:"Centro sin especificar" }}</span></td>
+          <td>{{ graduate.certified_on|date:"d/m/Y" }}</td>
+          <td><span class="badge {% if graduate.status == 'Inactivo' %}badge-red{% elif graduate.status == 'Desactualizado' %}badge-orange{% else %}badge-cyan{% endif %}">{{ graduate.status }}</span></td>
+          <td><a class="button button-ghost button-small" href="{% url 'app_egresados:detail' graduate.pk %}">ABRIR ↗</a></td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="6" class="empty-state">No se encontraron registros con estos filtros.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% if page.has_other_pages %}<nav class="pagination"><span>PÁGINA {{ page.number }} / {{ page.paginator.num_pages }}</span><span>{% if page.has_previous %}<a href="?q={{ query|urlencode }}&estado={{ status|urlencode }}&page={{ page.previous_page_number }}">← ANTERIOR</a>{% endif %} {% if page.has_next %}<a href="?q={{ query|urlencode }}&estado={{ status|urlencode }}&page={{ page.next_page_number }}">SIGUIENTE →</a>{% endif %}</span></nav>{% endif %}
+{% endblock %}

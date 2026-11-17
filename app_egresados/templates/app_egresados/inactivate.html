@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Inactivar perfil · Shinobi Tech Core{% endblock %}
+{% block content %}
+<section class="form-card ink-card"><p class="eyebrow">BAJA LÓGICA / HISTÓRICO PRESERVADO</p><h1 class="page-title">INACTIVAR <span>PERFIL.</span></h1><p>El perfil de <strong>{{ graduate }}</strong> dejará de estar activo. Su información permanecerá para las métricas históricas; no se borrará físicamente.</p><form method="post" class="form-grid">{% csrf_token %}<div class="field"><label for="reason">MOTIVO (FALLECIMIENTO, DUPLICIDAD O REVOCATORIA)</label><select id="reason" name="reason" required><option value="">Seleccionar motivo</option><option>Fallecimiento</option><option>Duplicidad</option><option>Revocatoria</option><option>Otro</option></select></div><div class="button-row"><button class="button button-primary" type="submit">CONFIRMAR INACTIVACIÓN</button><a class="button button-ghost" href="{% url 'app_egresados:detail' graduate.pk %}">CANCELAR</a></div></form></section>
+{% endblock %}

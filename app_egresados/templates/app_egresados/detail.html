@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ graduate.first_name }} {{ graduate.last_name }} · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div><p class="eyebrow">FICHA INDIVIDUAL / {{ graduate.document_number }}</p><h1 class="page-title">{{ graduate.first_name|upper }} <span>{{ graduate.last_name|upper }}.</span></h1><p class="lead">{{ graduate.program }} · {{ graduate.center|default:"Centro sin especificar" }}</p></div>
+  {% if is_administrator %}<div class="toolbar"><a class="button button-ghost" href="{% url 'app_egresados:admin_update' graduate.pk %}">EDITAR MAESTRO</a><a class="button button-primary" href="{% url 'app_egresados:inactivate' graduate.pk %}">INACTIVAR</a></div>{% endif %}
+</header>
+<div class="content-grid">
+  <section class="paper-card"><p class="eyebrow">IDENTIDAD / REGISTRO</p><dl class="detail-list"><dt>Documento</dt><dd>{{ graduate.document_type }} · {{ graduate.document_number }}</dd><dt>Certificación</dt><dd>{{ graduate.certified_on|date:"d/m/Y" }}</dd><dt>Estado académico</dt><dd>{{ graduate.academic_status }}</dd><dt>Estado del perfil</dt><dd><span class="badge">{{ graduate.status }}</span></dd><dt>Última actualización</dt><dd>{{ graduate.last_updated_at|date:"d/m/Y" }}</dd></dl></section>
+  <section class="paper-card"><p class="eyebrow">CONTACTO / INFORMACIÓN</p><dl class="detail-list"><dt>Correo</dt><dd>{{ graduate.email|default:"No registrado" }}</dd><dt>Teléfono</dt><dd>{{ graduate.phone|default:"No registrado" }}</dd><dt>Dirección</dt><dd>{{ graduate.address|default:"No registrada" }}</dd><dt>Municipio</dt><dd>{{ graduate.municipality|default:"No registrado" }}</dd><dt>Situación laboral</dt><dd>{{ graduate.employment_status }}</dd><dt>Tipo de contrato</dt><dd>{{ graduate.contract_type|default:"No registrado" }}</dd></dl></section>
+</div>
+<section class="paper-card section-spaced"><div class="page-header"><div><p class="eyebrow">TRAYECTORIA / REGISTROS HIJOS</p><h2 class="panel-title">HISTORIAL</h2></div></div>{% for entry in graduate.trayectorias.all %}<p><span class="badge">{{ entry.get_kind_display }}</span> <strong>{{ entry.title }}</strong> · {{ entry.organization }} <span class="muted">{{ entry.started_on|date:"Y"|default:"" }}</span></p>{% empty %}<p class="muted">Todavía no hay registros de trayectoria.</p>{% endfor %}</section>
+{% endblock %}

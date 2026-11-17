@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Mi trayectoria · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="page-header"><div><p class="eyebrow">REGISTROS HIJOS / HISTORIAL</p><h1 class="page-title">MI <span>TRAYECTORIA.</span></h1><p class="lead">Registra tus experiencias laborales, formación y proyectos de emprendimiento.</p></div><a class="button button-primary" href="{% url 'app_egresados:trajectory_create' %}">+ AGREGAR REGISTRO</a></header>
+<section class="table-card"><div class="table-wrap"><table><thead><tr><th>TIPO</th><th>DETALLE</th><th>ORGANIZACIÓN</th><th>PERÍODO</th><th>ACCIÓN</th></tr></thead><tbody>
+{% for entry in entries %}<tr><td><span class="badge">{{ entry.get_kind_display }}</span></td><td><strong>{{ entry.title }}</strong><br>{{ entry.description|truncatechars:90 }}</td><td>{{ entry.organization|default:"—" }}</td><td>{{ entry.started_on|date:"d/m/Y"|default:"—" }} – {{ entry.ended_on|date:"d/m/Y"|default:"Actual" }}</td><td><form method="post" action="{% url 'app_egresados:trajectory_delete' entry.pk %}">{% csrf_token %}<button class="button button-ghost button-small" type="submit">ELIMINAR</button></form></td></tr>
+{% empty %}<tr><td colspan="5" class="empty-state">Aún no has agregado registros.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

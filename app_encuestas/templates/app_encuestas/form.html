@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · Shinobi Tech Core{% endblock %}
+{% block content %}
+<header class="section-heading"><p class="eyebrow">COMUNICACIONES / SEGUIMIENTO</p><h1 class="page-title">{{ title|upper }}</h1></header>
+<section class="form-card ink-card"><form method="post" class="form-grid form-columns">{% csrf_token %}{% for field in form %}<div class="field {% if field.name == 'description' or field.name == 'question_specs' or field.name == 'body' %}full{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}{% if form.non_field_errors %}<div class="form-errors full">{{ form.non_field_errors }}</div>{% endif %}<div class="button-row field full"><button class="button button-primary" type="submit">GUARDAR Y CONTINUAR</button><a class="button button-ghost" href="{% url 'app_encuestas:list' %}">CANCELAR</a></div></form></section>
+{% endblock %}
